@@ -6,6 +6,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/hooks/use-language";
 import { Upload, FileImage, File } from "lucide-react";
 import { ocrService } from "@/lib/ocr";
+import { googleVisionService } from "@/lib/google-vision";
 import { apiRequest } from "@/lib/queryClient";
 
 interface FileUploadProps {
@@ -88,7 +89,7 @@ export function FileUpload({ onTextExtracted, onProcessingChange }: FileUploadPr
       const { documentId } = await uploadResponse.json();
       setProcessingStatus({ uploading: false, extracting: true, ready: false });
 
-      // Extract text using OCR
+      // Extract text using OCR - try Google Vision first, fallback to Tesseract
       let extractedText = '';
       
       if (file.type === 'application/pdf') {
@@ -96,9 +97,26 @@ export function FileUpload({ onTextExtracted, onProcessingChange }: FileUploadPr
         // For now, show a message that PDF OCR is not fully implemented
         extractedText = 'PDF text extraction is not fully implemented yet. Please use image files for OCR.';
       } else {
-        // Process image files with Tesseract
-        await ocrService.initialize();
-        extractedText = await ocrService.extractText(file);
+        try {
+          // Try Google Vision API first for better accuracy
+          extractedText = await googleVisionService.extractText(file);
+          
+          // If Google Vision fails or returns empty, fallback to Tesseract
+          if (!extractedText || extractedText.trim().length === 0) {
+            console.log('Google Vision returned empty text, falling back to Tesseract');
+            await ocrService.initialize();
+            extractedText = await ocrService.extractText(file);
+          }
+        } catch (visionError) {
+          console.log('Google Vision failed, falling back to Tesseract:', visionError);
+          try {
+            await ocrService.initialize();
+            extractedText = await ocrService.extractText(file);
+          } catch (tesseractError) {
+            console.error('Both OCR methods failed:', tesseractError);
+            throw new Error('Failed to extract text from the image');
+          }
+        }
       }
 
       // Save extracted text to server

@@ -108,16 +108,17 @@ export function TextEditor({ content, onContentChange }: TextEditorProps) {
 
   return (
     <div className="space-y-6">
-      <Card>
+      <Card className="nepali-editor-container border-0 shadow-lg">
         <CardContent className="p-6">
-          <h3 className="text-md font-medium mb-3">
+          <h3 className="text-lg font-semibold mb-4 flex items-center">
+            <FileText className="w-5 h-5 mr-2 text-primary" />
             {t("export.title")}
           </h3>
           
-          <div className="space-y-2">
+          <div className="grid grid-cols-2 gap-3">
             <Button 
               onClick={handleExportToWord}
-              className="w-full bg-blue-600 hover:bg-blue-700"
+              className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
             >
               <FileText className="w-4 h-4 mr-2" />
               {t("export.word")}
@@ -125,7 +126,7 @@ export function TextEditor({ content, onContentChange }: TextEditorProps) {
             
             <Button 
               onClick={handleExportToPDF}
-              className="w-full bg-red-600 hover:bg-red-700"
+              className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
             >
               <FileImage className="w-4 h-4 mr-2" />
               {t("export.pdf")}

@@ -13,7 +13,9 @@ export const documents = pgTable("documents", {
   fileName: text("file_name").notNull(),
   originalText: text("original_text"),
   editedText: text("edited_text"),
+  userId: integer("user_id").references(() => users.id),
   createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({
@@ -25,6 +27,7 @@ export const insertDocumentSchema = createInsertSchema(documents).pick({
   fileName: true,
   originalText: true,
   editedText: true,
+  userId: true,
 });
 
 export type InsertUser = z.infer<typeof insertUserSchema>;

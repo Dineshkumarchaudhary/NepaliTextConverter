@@ -32,6 +32,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         fileName: req.file.originalname,
         originalText: null,
         editedText: null,
+        userId: null, // For now, not implementing user auth
       });
 
       res.json({ 
@@ -114,6 +115,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('Get document error:', error);
       res.status(500).json({ message: "Failed to get document" });
+    }
+  });
+
+  // Get all documents
+  app.get("/api/documents", async (req, res) => {
+    try {
+      // For now, get all documents (without user filtering since we don't have auth)
+      const documents = await storage.getUserDocuments(0); // This will return all documents
+      res.json({ documents });
+    } catch (error) {
+      console.error('Get documents error:', error);
+      res.status(500).json({ message: "Failed to get documents" });
     }
   });
 

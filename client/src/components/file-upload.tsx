@@ -89,7 +89,7 @@ export function FileUpload({ onTextExtracted, onProcessingChange }: FileUploadPr
       const { documentId } = await uploadResponse.json();
       setProcessingStatus({ uploading: false, extracting: true, ready: false });
 
-      // Extract text using OCR - try Google Vision first, fallback to Tesseract
+      // Extract text using OCR - use Tesseract as primary method
       let extractedText = '';
       
       if (file.type === 'application/pdf') {
@@ -98,24 +98,34 @@ export function FileUpload({ onTextExtracted, onProcessingChange }: FileUploadPr
         extractedText = 'PDF text extraction is not fully implemented yet. Please use image files for OCR.';
       } else {
         try {
-          // Try Google Vision API first for better accuracy
-          extractedText = await googleVisionService.extractText(file);
+          // Check if Google Vision API key is available
+          const hasGoogleVisionKey = import.meta.env.VITE_GOOGLE_CLOUD_VISION_API_KEY;
           
-          // If Google Vision fails or returns empty, fallback to Tesseract
-          if (!extractedText || extractedText.trim().length === 0) {
-            console.log('Google Vision returned empty text, falling back to Tesseract');
+          if (hasGoogleVisionKey) {
+            try {
+              // Try Google Vision API first for better accuracy
+              extractedText = await googleVisionService.extractText(file);
+              
+              // If Google Vision returns empty, fallback to Tesseract
+              if (!extractedText || extractedText.trim().length === 0) {
+                console.log('Google Vision returned empty text, falling back to Tesseract');
+                await ocrService.initialize();
+                extractedText = await ocrService.extractText(file);
+              }
+            } catch (visionError) {
+              console.log('Google Vision failed, falling back to Tesseract:', visionError);
+              await ocrService.initialize();
+              extractedText = await ocrService.extractText(file);
+            }
+          } else {
+            // Use Tesseract directly if no Google Vision API key
+            console.log('No Google Vision API key found, using Tesseract OCR');
             await ocrService.initialize();
             extractedText = await ocrService.extractText(file);
           }
-        } catch (visionError) {
-          console.log('Google Vision failed, falling back to Tesseract:', visionError);
-          try {
-            await ocrService.initialize();
-            extractedText = await ocrService.extractText(file);
-          } catch (tesseractError) {
-            console.error('Both OCR methods failed:', tesseractError);
-            throw new Error('Failed to extract text from the image');
-          }
+        } catch (tesseractError) {
+          console.error('OCR processing failed:', tesseractError);
+          throw new Error('Failed to extract text from the image');
         }
       }
 

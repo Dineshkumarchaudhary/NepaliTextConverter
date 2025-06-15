@@ -1,7 +1,9 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertDocumentSchema } from "@shared/schema";
+import { insertDocumentSchema, documents } from "@shared/schema";
+import { db } from "./db";
+import { eq } from "drizzle-orm";
 import multer from "multer";
 import path from "path";
 
@@ -57,13 +59,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "No extracted text provided" });
       }
 
-      const document = await storage.getDocument(documentId);
-      if (!document) {
+      const existingDocument = await storage.getDocument(documentId);
+      if (!existingDocument) {
         return res.status(404).json({ message: "Document not found" });
       }
 
-      // Update document with OCR text
+      // Update the document with the extracted text as edited text
       const updatedDocument = await storage.updateDocument(documentId, extractedText);
+      
+      // Also set original text if it's not already set
+      if (!existingDocument.originalText) {
+        await db.update(documents).set({ originalText: extractedText }).where(eq(documents.id, documentId));
+      }
       
       res.json({ 
         success: true, 

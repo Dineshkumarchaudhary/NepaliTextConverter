@@ -7,7 +7,7 @@ import { useLanguage } from "@/hooks/use-language";
 import { Upload, FileImage, File } from "lucide-react";
 import { ocrService } from "@/lib/ocr";
 import { googleVisionService } from "@/lib/google-vision";
-import { apiRequest } from "@/lib/queryClient";
+import { apiRequest, queryClient } from "@/lib/queryClient";
 
 interface FileUploadProps {
   onTextExtracted: (text: string) => void;
@@ -127,6 +127,9 @@ export function FileUpload({ onTextExtracted, onProcessingChange }: FileUploadPr
       setProcessingStatus({ uploading: false, extracting: false, ready: true });
       onTextExtracted(extractedText);
       onProcessingChange(false);
+
+      // Invalidate document history to refresh the list
+      queryClient.invalidateQueries({ queryKey: ['/api/documents'] });
 
       toast({
         title: "Success",

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FileUpload } from "@/components/file-upload";
 import { TextEditor } from "@/components/text-editor";
+import { DocumentHistory } from "@/components/document-history";
 import { useTheme } from "@/hooks/use-theme";
 import { useLanguage } from "@/hooks/use-language";
 import { Button } from "@/components/ui/button";
@@ -27,6 +28,10 @@ export default function Home() {
 
   const handleContentChange = (content: string) => {
     setExtractedText(content);
+  };
+
+  const handleDocumentSelect = (document: any) => {
+    setExtractedText(document.editedText || document.originalText || '');
   };
 
   return (
@@ -84,10 +89,13 @@ export default function Home() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           {/* Sidebar */}
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1 space-y-6">
             <FileUpload
               onTextExtracted={handleTextExtracted}
               onProcessingChange={setIsProcessing}
+            />
+            <DocumentHistory
+              onDocumentSelect={handleDocumentSelect}
             />
           </div>
 

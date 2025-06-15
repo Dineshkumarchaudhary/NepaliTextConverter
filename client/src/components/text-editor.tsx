@@ -135,120 +135,138 @@ export function TextEditor({ content, onContentChange }: TextEditorProps) {
         </CardContent>
       </Card>
 
-      <Card>
-        <div className="border-b p-4">
-          <div className="flex flex-wrap items-center gap-2">
+      <Card className="nepali-editor-container border-0 shadow-xl">
+        <div className="border-b p-6 bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-700 rounded-t-xl">
+          <div className="flex flex-wrap items-center gap-3">
             {/* Font Controls */}
-            <div className="flex items-center space-x-2 border-r pr-4">
-              <Select value={selectedFont} onValueChange={handleFontChange}>
-                <SelectTrigger className="w-24">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Mangal">Mangal</SelectItem>
-                  <SelectItem value="Kalimati">Kalimati</SelectItem>
-                  <SelectItem value="Preeti">Preeti</SelectItem>
-                  <SelectItem value="Arial">Arial</SelectItem>
-                </SelectContent>
-              </Select>
+            <div className="flex items-center space-x-3 border-r pr-6 border-gray-300 dark:border-gray-600">
+              <div className="flex flex-col">
+                <label className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Font</label>
+                <Select value={selectedFont} onValueChange={handleFontChange}>
+                  <SelectTrigger className="w-32 h-9 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Mangal">Mangal</SelectItem>
+                    <SelectItem value="Kalimati">Kalimati</SelectItem>
+                    <SelectItem value="Preeti">Preeti</SelectItem>
+                    <SelectItem value="Noto Sans Devanagari">Noto Sans</SelectItem>
+                    <SelectItem value="Arial">Arial</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
               
-              <Select value={selectedSize} onValueChange={handleSizeChange}>
-                <SelectTrigger className="w-16">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="12pt">12pt</SelectItem>
-                  <SelectItem value="14pt">14pt</SelectItem>
-                  <SelectItem value="16pt">16pt</SelectItem>
-                  <SelectItem value="18pt">18pt</SelectItem>
-                  <SelectItem value="20pt">20pt</SelectItem>
-                  <SelectItem value="24pt">24pt</SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="flex flex-col">
+                <label className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Size</label>
+                <Select value={selectedSize} onValueChange={handleSizeChange}>
+                  <SelectTrigger className="w-20 h-9 bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="12pt">12pt</SelectItem>
+                    <SelectItem value="14pt">14pt</SelectItem>
+                    <SelectItem value="16pt">16pt</SelectItem>
+                    <SelectItem value="18pt">18pt</SelectItem>
+                    <SelectItem value="20pt">20pt</SelectItem>
+                    <SelectItem value="24pt">24pt</SelectItem>
+                    <SelectItem value="28pt">28pt</SelectItem>
+                    <SelectItem value="32pt">32pt</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
             {/* Formatting Controls */}
-            <div className="flex items-center space-x-1 border-r pr-4">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="toolbar-btn"
-                onClick={() => execCommand('bold')}
-              >
-                <Bold className="w-4 h-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="toolbar-btn"
-                onClick={() => execCommand('italic')}
-              >
-                <Italic className="w-4 h-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="toolbar-btn"
-                onClick={() => execCommand('underline')}
-              >
-                <Underline className="w-4 h-4" />
-              </Button>
+            <div className="flex items-center space-x-2 border-r pr-6 border-gray-300 dark:border-gray-600">
+              <div className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Format</div>
+              <div className="flex items-center space-x-1">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="toolbar-btn h-9 w-9"
+                  onClick={() => execCommand('bold')}
+                >
+                  <Bold className="w-4 h-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="toolbar-btn h-9 w-9"
+                  onClick={() => execCommand('italic')}
+                >
+                  <Italic className="w-4 h-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="toolbar-btn h-9 w-9"
+                  onClick={() => execCommand('underline')}
+                >
+                  <Underline className="w-4 h-4" />
+                </Button>
+              </div>
             </div>
 
             {/* Alignment Controls */}
-            <div className="flex items-center space-x-1 border-r pr-4">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="toolbar-btn"
-                onClick={() => execCommand('justifyLeft')}
-              >
-                <AlignLeft className="w-4 h-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="toolbar-btn"
-                onClick={() => execCommand('justifyCenter')}
-              >
-                <AlignCenter className="w-4 h-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="toolbar-btn"
-                onClick={() => execCommand('justifyRight')}
-              >
-                <AlignRight className="w-4 h-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="toolbar-btn active"
-                onClick={() => execCommand('justifyFull')}
-              >
-                <AlignJustify className="w-4 h-4" />
-              </Button>
+            <div className="flex items-center space-x-2 border-r pr-6 border-gray-300 dark:border-gray-600">
+              <div className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Align</div>
+              <div className="flex items-center space-x-1">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="toolbar-btn h-9 w-9"
+                  onClick={() => execCommand('justifyLeft')}
+                >
+                  <AlignLeft className="w-4 h-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="toolbar-btn h-9 w-9"
+                  onClick={() => execCommand('justifyCenter')}
+                >
+                  <AlignCenter className="w-4 h-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="toolbar-btn h-9 w-9"
+                  onClick={() => execCommand('justifyRight')}
+                >
+                  <AlignRight className="w-4 h-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="toolbar-btn active h-9 w-9"
+                  onClick={() => execCommand('justifyFull')}
+                >
+                  <AlignJustify className="w-4 h-4" />
+                </Button>
+              </div>
             </div>
 
             {/* Additional Controls */}
-            <div className="flex items-center space-x-1">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="toolbar-btn"
-                onClick={() => execCommand('undo')}
-              >
-                <Undo className="w-4 h-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="toolbar-btn"
-                onClick={() => execCommand('redo')}
-              >
-                <Redo className="w-4 h-4" />
-              </Button>
+            <div className="flex items-center space-x-2">
+              <div className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Actions</div>
+              <div className="flex items-center space-x-1">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="toolbar-btn h-9 w-9"
+                  onClick={() => execCommand('undo')}
+                >
+                  <Undo className="w-4 h-4" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="toolbar-btn h-9 w-9"
+                  onClick={() => execCommand('redo')}
+                >
+                  <Redo className="w-4 h-4" />
+                </Button>
+              </div>
             </div>
           </div>
         </div>
@@ -267,14 +285,28 @@ export function TextEditor({ content, onContentChange }: TextEditorProps) {
           />
         </CardContent>
 
-        <div className="border-t px-6 py-3">
-          <div className="flex justify-between items-center text-sm text-muted-foreground">
-            <div>
-              {t("editor.words")}: {wordCount} | {t("editor.characters")}: {charCount}
+        <div className="border-t px-6 py-4 bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-700 rounded-b-xl">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center space-x-6 text-sm">
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                <span className="font-medium text-gray-700 dark:text-gray-300">
+                  {t("editor.words")}: <span className="text-blue-600 dark:text-blue-400 font-semibold">{wordCount}</span>
+                </span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                <span className="font-medium text-gray-700 dark:text-gray-300">
+                  {t("editor.characters")}: <span className="text-purple-600 dark:text-purple-400 font-semibold">{charCount}</span>
+                </span>
+              </div>
             </div>
-            <div className="flex items-center space-x-4">
-              <span>{t("editor.traditional")}</span>
-              <div className="w-2 h-2 bg-green-500 rounded-full" />
+            <div className="flex items-center space-x-3">
+              <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t("editor.traditional")}</span>
+              <div className="flex items-center space-x-2">
+                <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                <span className="text-xs text-green-600 dark:text-green-400 font-medium">Active</span>
+              </div>
             </div>
           </div>
         </div>

@@ -34,7 +34,7 @@ export default function Home() {
       {/* Header */}
       <header className="gradient-header bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-18">
+          <div className="flex justify-between items-center h-20">
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-3">
                 <div className="bg-white/20 p-2 rounded-xl backdrop-blur-sm">

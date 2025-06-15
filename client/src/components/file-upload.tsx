@@ -148,14 +148,15 @@ export function FileUpload({ onTextExtracted, onProcessingChange }: FileUploadPr
 
   return (
     <div className="space-y-6">
-      <Card>
+      <Card className="nepali-editor-container border-0 shadow-lg">
         <CardContent className="p-6">
-          <h2 className="text-lg font-semibold mb-4">
+          <h2 className="text-lg font-semibold mb-6 flex items-center">
+            <Upload className="w-5 h-5 mr-2 text-primary" />
             {t("upload.title")}
           </h2>
           
           <div
-            className={`file-upload-area rounded-lg p-6 text-center cursor-pointer transition-colors ${
+            className={`file-upload-area rounded-xl p-8 text-center cursor-pointer transition-all duration-300 ${
               isDragOver ? 'dragover' : ''
             }`}
             onDragOver={handleDragOver}
@@ -163,14 +164,21 @@ export function FileUpload({ onTextExtracted, onProcessingChange }: FileUploadPr
             onDrop={handleDrop}
             onClick={handleFileSelect}
           >
-            <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-            <p className="text-muted-foreground mb-2">
+            <div className="mb-6">
+              {isDragOver ? (
+                <FileImage className="h-16 w-16 mx-auto text-primary animate-bounce" />
+              ) : (
+                <Upload className="h-16 w-16 mx-auto text-muted-foreground" />
+              )}
+            </div>
+            <p className="text-lg font-medium text-gray-700 dark:text-gray-300 mb-2">
               {t("upload.dragdrop")}
             </p>
-            <p className="text-sm text-muted-foreground mb-4">
+            <p className="text-sm text-muted-foreground mb-6">
               {t("upload.supports")}
             </p>
-            <Button>
+            <Button className="bg-gradient-to-r from-primary to-blue-600 hover:from-blue-600 hover:to-blue-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+              <File className="w-4 h-4 mr-2" />
               {t("upload.choose")}
             </Button>
           </div>
@@ -185,40 +193,74 @@ export function FileUpload({ onTextExtracted, onProcessingChange }: FileUploadPr
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="nepali-editor-container border-0 shadow-lg">
         <CardContent className="p-6">
-          <h3 className="text-md font-medium mb-3">
+          <h3 className="text-lg font-semibold mb-6 flex items-center">
+            <div className="w-5 h-5 mr-2 rounded-full bg-gradient-to-r from-blue-500 to-purple-500"></div>
             {t("processing.title")}
           </h3>
           
-          <div className="space-y-3">
-            <div className="flex items-center space-x-3">
-              <div className={`w-4 h-4 rounded-full ${
-                processingStatus.uploading ? 'bg-blue-500 animate-pulse' : 
-                processingStatus.extracting || processingStatus.ready ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'
-              }`} />
-              <span className="text-sm text-muted-foreground">
-                {t("processing.uploaded")}
-              </span>
+          <div className="space-y-4">
+            <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
+              <div className="flex items-center space-x-3">
+                <div className={`relative w-5 h-5 rounded-full transition-all duration-300 ${
+                  processingStatus.uploading ? 'bg-blue-500 processing-indicator' : 
+                  processingStatus.extracting || processingStatus.ready ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'
+                }`}>
+                  {(processingStatus.extracting || processingStatus.ready) && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-2 h-2 bg-white rounded-full"></div>
+                    </div>
+                  )}
+                </div>
+                <span className="font-medium text-gray-700 dark:text-gray-300">
+                  {t("processing.uploaded")}
+                </span>
+              </div>
+              {(processingStatus.extracting || processingStatus.ready) && (
+                <div className="text-xs font-medium text-green-600 dark:text-green-400">✓ Complete</div>
+              )}
             </div>
             
-            <div className="flex items-center space-x-3">
-              <div className={`w-4 h-4 rounded-full ${
-                processingStatus.extracting ? 'bg-blue-500 animate-pulse' : 
-                processingStatus.ready ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'
-              }`} />
-              <span className="text-sm text-muted-foreground">
-                {t("processing.extracting")}
-              </span>
+            <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
+              <div className="flex items-center space-x-3">
+                <div className={`relative w-5 h-5 rounded-full transition-all duration-300 ${
+                  processingStatus.extracting ? 'bg-blue-500 processing-indicator' : 
+                  processingStatus.ready ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'
+                }`}>
+                  {processingStatus.ready && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-2 h-2 bg-white rounded-full"></div>
+                    </div>
+                  )}
+                </div>
+                <span className="font-medium text-gray-700 dark:text-gray-300">
+                  {t("processing.extracting")}
+                </span>
+              </div>
+              {processingStatus.ready && (
+                <div className="text-xs font-medium text-green-600 dark:text-green-400">✓ Complete</div>
+              )}
             </div>
             
-            <div className="flex items-center space-x-3">
-              <div className={`w-4 h-4 rounded-full ${
-                processingStatus.ready ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'
-              }`} />
-              <span className="text-sm text-muted-foreground">
-                {t("processing.ready")}
-              </span>
+            <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
+              <div className="flex items-center space-x-3">
+                <div className={`relative w-5 h-5 rounded-full transition-all duration-300 ${
+                  processingStatus.ready ? 'bg-green-500 animate-pulse' : 'bg-gray-300 dark:bg-gray-600'
+                }`}>
+                  {processingStatus.ready && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-2 h-2 bg-white rounded-full"></div>
+                    </div>
+                  )}
+                </div>
+                <span className="font-medium text-gray-700 dark:text-gray-300">
+                  {t("processing.ready")}
+                </span>
+              </div>
+              {processingStatus.ready && (
+                <div className="text-xs font-medium text-green-600 dark:text-green-400">✓ Ready to Edit</div>
+              )}
             </div>
           </div>
         </CardContent>
